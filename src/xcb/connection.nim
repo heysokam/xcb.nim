@@ -4,8 +4,9 @@
 # @deps std
 from std/importutils import nil
 # @deps xcb
-import ./raw as C
+from ./raw as C import nil
 import ./types {.all.}
+from ./screen import create
 
 
 #_______________________________________
@@ -61,17 +62,9 @@ func validate *(conn :Connection) :void=
 
 
 #_______________________________________
-# @section Connection: Screen
+# @section Connection: Request Aliases
 #_____________________________
 func get *(conn :var Connection; _:typedesc[Screen]) :Screen=
-  importutils.privateAccess(types.Connection)
-  importutils.privateAccess(types.Screen)
-  result = Screen()
-
-  var iter :C.xcb_screen_iterator_t= C.xcb_setup_roots_iterator(C.xcb_get_setup(conn.ct))
-  while iter.rem.bool:
-    # TODO: This `conn.screen == ScreenID(0)` check feels incorrect/wrong
-    if conn.screen == ScreenID(0): result.ct = iter.data
-    conn.screen.dec
-    C.xcb_screen_next(iter.addr)
+  ## @descr Alias to `Screen.create` for naming consistency
+  Screen.create(conn)
 

@@ -5,9 +5,8 @@
 from std/importutils import nil
 from std/strformat import fmt
 # @deps xcb
-import ./raw as C
+from ./raw as C import nil
 import ./types {.all.}
-from ./connection import get
 
 
 #_______________________________________
@@ -28,6 +27,15 @@ func report *(scr :Screen) :string=
 #_______________________________________
 # @section Screen: Context
 #_____________________________
-func create *(_:typedesc[Screen]; conn :var Connection) :Screen= conn.get(Screen)
-  ## Alias to `Connection.getScreen` for naming consistency
+func create *(_:typedesc[Screen]; conn :var Connection) :Screen=
+  importutils.privateAccess(types.Connection)
+  importutils.privateAccess(types.Screen)
+  result = Screen()
+
+  var iter :C.xcb_screen_iterator_t= C.xcb_setup_roots_iterator(C.xcb_get_setup(conn.ct))
+  while iter.rem.bool:
+    # TODO: This `conn.screen == ScreenID(0)` check feels incorrect/wrong
+    if conn.screen == ScreenID(0): result.ct = iter.data
+    conn.screen.dec
+    C.xcb_screen_next(iter.addr)
 
