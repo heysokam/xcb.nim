@@ -6,6 +6,7 @@ import pkg/xcb
 type Example = object
   connection  :xcb.Connection
   screen      :xcb.Screen
+  window      :xcb.Window
 
 
 func init () :Example=
@@ -14,9 +15,11 @@ func init () :Example=
   # Connect to the X server.
   result.connection = xcb.Connection.create()
   result.connection.validate()
-  result.screen = result.connection.get(Screen)
-  debugEcho result.screen.report()
   # Perform X-related initialization.
+  result.screen = result.connection.get(Screen)
+  result.window = result.connection.get(Window, result.screen)
+  result.connection.wait()
+  debugEcho result.screen.report()
   return result
 
 
@@ -28,7 +31,7 @@ func update (example :Example) :void=
   discard example
 
 
-func close (example :Example) :bool= true
+func close (example :Example) :bool= false
 func term (example :var Example) :void=
   # Close down the connection to the X server.
   # Perform cleanup operations.

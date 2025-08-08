@@ -1,7 +1,8 @@
 #:___________________________________________________________
 #  xcb.nim  |  Copyright (C) Ivan Mar (sOkam!)  |  MPL-2.0  :
 #:___________________________________________________________
-import ./raw as C
+# @deps xcb
+from ./raw as C import nil
 
 
 #_______________________________________
@@ -31,4 +32,12 @@ type ConnectionStatus *{.pure.}= enum
   Closed_ParseError,             ## Error during parsing display string
   Closed_InvalidScreen,          ## The server does not have a screen matching the display
   Unknown
+
+
+#_______________________________________
+# @section Window
+#_____________________________
+type Window * = object
+  ct       :C.xcb_window_t
+  visible  :bool= true
 

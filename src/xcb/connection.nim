@@ -7,6 +7,7 @@ from std/importutils import nil
 from ./raw as C import nil
 import ./types {.all.}
 from ./screen import create
+from ./window import create, Position
 
 
 #_______________________________________
@@ -77,4 +78,14 @@ func flush *(conn :Connection) :void {.inline.}= conn.wait()
 func get *(conn :var Connection; _:typedesc[Screen]) :Screen=
   ## @descr Alias to `Screen.create` for naming consistency
   Screen.create(conn)
+#___________________
+func get *(conn :var Connection; _:typedesc[Window];
+    screen     : Screen;
+    position   : window.Position = Position();
+    size       : window.Size     = window.default_size;        ## Size of the window in pixels
+    border     : uint            = window.default_border;      ## Size of the window border in pixels
+    visible    : bool            = window.default_visibility;  ## Will map the window by default when omitted (aka true)
+  ) :Window=
+  ## @descr Alias to `Window.create` for naming consistency
+  Window.create(conn, screen, position, size, border, visible)
 

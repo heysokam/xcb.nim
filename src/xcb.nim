@@ -8,3 +8,4 @@
 import ./xcb/types      ; export types
 import ./xcb/connection ; export connection
 import ./xcb/screen     ; export screen
+import ./xcb/window     ; export window
