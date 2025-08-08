@@ -40,7 +40,12 @@ type ConnectionStatus *{.pure.}= enum
   Closed_RequiredLengthExceeded, ## Exceeded request length that server accepts
   Closed_ParseError,             ## Error during parsing display string
   Closed_InvalidScreen,          ## The server does not have a screen matching the display
+  Closed_FDPassingFailed,        ## Connection closed because some FD passing operation failed
   Unknown
+func `<`  *(A :ConnectionStatus; B :cint) :bool= A.ord < B
+func `<=` *(A :ConnectionStatus; B :cint) :bool= A.ord <= B
+func toConnectionStatus *(err :cint) :ConnectionStatus= ConnectionStatus(err)
+
 
 
 #_______________________________________

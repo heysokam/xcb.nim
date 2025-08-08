@@ -18,19 +18,6 @@ type ConnectionError = object of CatchableError
 #_______________________________________
 # @section Connection: Status
 #_____________________________
-func `<`  *(A :ConnectionStatus; B :cint) :bool= A.ord < B
-func `<=` *(A :ConnectionStatus; B :cint) :bool= A.ord <= B
-func toConnectionStatus (err :cint) :ConnectionStatus=
-  case err
-  of 0                                  : ConnectionStatus.Ok
-  of C.XCB_CONN_ERROR                   : ConnectionStatus.Error
-  of C.XCB_CONN_CLOSED_EXT_NOTSUPPORTED : ConnectionStatus.Closed_ExtensionNotSupported
-  of C.XCB_CONN_CLOSED_MEM_INSUFFICIENT : ConnectionStatus.Closed_MemoryInsufficient
-  of C.XCB_CONN_CLOSED_REQ_LEN_EXCEED   : ConnectionStatus.Closed_RequiredLengthExceeded
-  of C.XCB_CONN_CLOSED_PARSE_ERR        : ConnectionStatus.Closed_ParseError
-  of C.XCB_CONN_CLOSED_INVALID_SCREEN   : ConnectionStatus.Closed_InvalidScreen
-  else                                  : ConnectionStatus.Unknown
-
 
 #_______________________________________
 # @section Connection: Context
