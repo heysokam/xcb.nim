@@ -2,6 +2,7 @@
 #  xcb.nim  |  Copyright (C) Ivan Mar (sOkam!)  |  MPL-2.0  :
 #:___________________________________________________________
 # @deps std
+from std/bitops import setBit
 # @deps xcb
 from ./internal/helpers import width, height
 from ./raw as C import nil
@@ -14,7 +15,7 @@ import ./types as xcb
 type Position   * = helpers.UVec2
 type Size       * = helpers.Size2D
 type Event *{.pure.}= enum
-  # @WARN: MUST match the order of xcb_event_mask_t
+  # @WARN: MUST match the order of xcb_event_mask_t exactly
   Key_press,             ## XCB_EVENT_MASK_KEY_PRESS = 1
   Key_release,           ## XCB_EVENT_MASK_KEY_RELEASE = 2
   Button_press,          ## XCB_EVENT_MASK_BUTTON_PRESS = 4
@@ -43,6 +44,7 @@ type Event *{.pure.}= enum
 #___________________
 type SignUp * = object
   events  *:set[window.Event]= {}
+func none *[T :window.SignUp](_:typedesc[T]) :T=  T()
 
 
 #_______________________________________
@@ -52,27 +54,25 @@ type SignUp * = object
 const default_size        *:window.Position = window.Size(x:100, y:100)
 const default_border      *:uint            = 10;
 const default_visibility  *:bool            = true;
-#___________________
-# SignUp Presets
-const signup_Exposure = xcb.Value(
-  mask: C.XCB_CW_EVENT_MASK.uint32,
-  list: @[C.XCB_EVENT_MASK_EXPOSURE.uint32],
-  ) #:: signup.exposure
 
 
 #_______________________________________
 # @section Window: SignUp
 #_____________________________
-# SignUp Presets
-func none     *[T :window.SignUp](_:typedesc[T]) :T=  T()
-func exposure *[T :window.SignUp](_:typedesc[T]) :T=  T(events: {Exposure})
-#___________________
 # xcb.Value helpers
 func merge *[T :xcb.Value](A,B :T) :T= T() # FIX: Implement and private
+#___________________
+# SignUp Helpers
 func toValue (signup :window.SignUp) :xcb.Value=
   # FIX: Implement correctly
-  if window.Event.Exposure in signup.events: return signup_Exposure
-  else: return xcb.Value()
+  result = xcb.Value()
+  var id :int= -1
+  # Events : 2048
+  id.inc
+  result.list.add(0)
+  result.mask = result.mask or C.XCB_CW_EVENT_MASK.uint32
+  for entry in window.Event:
+    if entry in signup.events: result.list[id].setBit(entry.ord)
 
 
 #_______________________________________
@@ -84,7 +84,6 @@ func map *(
   ) :void=
   let response = C.xcb_map_window(connection.ct, win.ct)
   discard response # FIX: Do we need to do anything with this cookie
-
 
 func create *(_:typedesc[Window];
     connection : Connection;
@@ -115,4 +114,13 @@ func create *(_:typedesc[Window];
     ) #:: response = xcb_create_window
   discard response # TODO: Use `xcb_create_window_checked` and check for errors directly
   if result.visible: result.map(connection)
+
+func change *(
+    win    : var Window;
+    signup : window.SignUp;
+  ) :void=
+  ## @WARN: Not implemented. Does nothing.
+  # TODO: Figure out how to implement.
+  # C.xcb_change_window_attributes(c, win, XCB_CW_EVENT_MASK, values);
+  discard (win, signup)
 
