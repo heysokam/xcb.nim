@@ -6,6 +6,7 @@ from ./raw as C import nil
 import ./types as xcb
 from ./screen   import create
 from ./window   import create, Position
+from ./graphics import create
 
 
 #_______________________________________
@@ -86,4 +87,10 @@ func create *(conn :var Connection; _:typedesc[Window];
   ) :Window=
   ## @descr Alias to `Window.create` for ergonomics
   Window.create(conn, screen, position, size, border, visible)
+#___________________
+func create *(conn :var Connection; _:typedesc[Graphics];
+    screen : Screen;
+  ) :Graphics=
+  ## @descr Alias to `Graphics.create` for ergonomics
+  Graphics.create(conn, screen)
 

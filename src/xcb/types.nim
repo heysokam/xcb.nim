@@ -50,3 +50,10 @@ type Window * = object
   ct       *{.readonly.}:C.xcb_window_t
   visible  *{.readonly.}:bool= true
 
+
+#_______________________________________
+# @section Graphics Context
+#_____________________________
+type Graphics * = object
+  ct  *{.readonly.}:C.xcb_gcontext_t
+

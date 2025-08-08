@@ -7,6 +7,7 @@ type Example = object
   connection  :xcb.Connection
   screen      :xcb.Screen
   window      :xcb.Window
+  foreground  :xcb.Graphics
 
 
 func init () :Example=
@@ -18,6 +19,7 @@ func init () :Example=
   # Perform X-related initialization.
   result.screen     = result.connection.create(Screen)
   result.window     = result.connection.create(Window,   result.screen)
+  result.foreground = result.connection.create(Graphics, result.screen)
   result.connection.wait()
   debugEcho result.screen.report()
   return result
