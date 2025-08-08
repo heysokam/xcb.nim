@@ -3,9 +3,9 @@
 #:___________________________________________________________
 # @deps xcb
 from ./raw as C import nil
-from ./screen import create
-from ./window import create, Position
 import ./types as xcb
+from ./screen   import create
+from ./window   import create, Position
 
 
 #_______________________________________
@@ -73,17 +73,17 @@ func sync *(conn :Connection) :void=
 #_______________________________________
 # @section Connection: Request Aliases
 #_____________________________
-func get *(conn :var Connection; _:typedesc[Screen]) :Screen=
-  ## @descr Alias to `Screen.create` for naming consistency
+func create *(conn :var Connection; _:typedesc[Screen]) :Screen=
+  ## @descr Alias to `Screen.create` for ergonomics
   Screen.create(conn)
 #___________________
-func get *(conn :var Connection; _:typedesc[Window];
+func create *(conn :var Connection; _:typedesc[Window];
     screen     : Screen;
     position   : window.Position = Position();
     size       : window.Size     = window.default_size;        ## Size of the window in pixels
     border     : uint            = window.default_border;      ## Size of the window border in pixels
     visible    : bool            = window.default_visibility;  ## Will map the window by default when omitted (aka true)
   ) :Window=
-  ## @descr Alias to `Window.create` for naming consistency
+  ## @descr Alias to `Window.create` for ergonomics
   Window.create(conn, screen, position, size, border, visible)
 

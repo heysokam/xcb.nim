@@ -16,8 +16,8 @@ func init () :Example=
   result.connection = xcb.Connection.create()
   result.connection.validate()
   # Perform X-related initialization.
-  result.screen = result.connection.get(Screen)
-  result.window = result.connection.get(Window, result.screen)
+  result.screen     = result.connection.create(Screen)
+  result.window     = result.connection.create(Window,   result.screen)
   result.connection.wait()
   debugEcho result.screen.report()
   return result
