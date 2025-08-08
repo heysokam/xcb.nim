@@ -2,11 +2,10 @@
 #  xcb.nim  |  Copyright (C) Ivan Mar (sOkam!)  |  MPL-2.0  :
 #:___________________________________________________________
 # @deps std
-from std/importutils import nil
 from std/strformat import fmt
 # @deps xcb
 from ./raw as C import nil
-import ./types {.all.}
+import ./types as xcb
 
 
 #_______________________________________
@@ -20,7 +19,6 @@ const ReportTempl = """
  : black pixel -> {scr.ct.black_pixel}"""
 
 func report *(scr :Screen) :string=
-  importutils.privateAccess(types.Screen)
   result = fmt screen.ReportTempl
 
 
@@ -28,10 +26,7 @@ func report *(scr :Screen) :string=
 # @section Screen: Context
 #_____________________________
 func create *(_:typedesc[Screen]; conn :var Connection) :Screen=
-  importutils.privateAccess(types.Connection)
-  importutils.privateAccess(types.Screen)
   result = Screen()
-
   var iter :C.xcb_screen_iterator_t= C.xcb_setup_roots_iterator(C.xcb_get_setup(conn.ct))
   while iter.rem.bool:
     # TODO: This `conn.screen == ScreenID(0)` check feels incorrect/wrong

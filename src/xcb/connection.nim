@@ -1,13 +1,11 @@
 #:___________________________________________________________
 #  xcb.nim  |  Copyright (C) Ivan Mar (sOkam!)  |  MPL-2.0  :
 #:___________________________________________________________
-# @deps std
-from std/importutils import nil
 # @deps xcb
 from ./raw as C import nil
-import ./types {.all.}
 from ./screen import create
 from ./window import create, Position
+import ./types as xcb
 
 
 #_______________________________________
@@ -39,7 +37,6 @@ func toConnectionStatus (err :cint) :ConnectionStatus=
 func create *(_:typedesc[Connection];
     display : string = "";  ## Uses the `$DISPLAY` env variable when omitted
   ) :Connection=
-  importutils.privateAccess(types.Connection)
   result = Connection(display:display)
   var id :cint= cint.high()
   result.ct = C.xcb_connect(
@@ -49,12 +46,10 @@ func create *(_:typedesc[Connection];
   result.screen = id.ScreenID
 
 func destroy *(conn :var Connection) :void=
-  importutils.privateAccess(types.Connection)
   C.xcb_disconnect(conn.ct)
   conn = Connection()
 
 func hasError *(conn :Connection) :ConnectionStatus=
-  importutils.privateAccess(types.Connection)
   C.xcb_connection_has_error(conn.ct).toConnectionStatus
 
 func validate *(conn :Connection) :void=
@@ -64,7 +59,6 @@ func validate *(conn :Connection) :void=
 func wait *(conn :Connection) :void=
   ## @descr Forces any buffered output to be written to the server. Blocks until the write is complete.
   ## @note Originally named `xcb_flush`
-  importutils.privateAccess(types.Connection)
   let errored = C.xcb_flush(conn.ct) <= 0
   if errored: raise newException(ConnectionError, "The connection to the X server failed to wait for all commands in the buffer to be cleared.")
 
@@ -73,7 +67,6 @@ func flush *(conn :Connection) :void {.inline.}= conn.wait()
 
 func sync *(conn :Connection) :void=
   ## @descr Writes all pending requests to the X server, and waits until the X server has finished processing them.
-  importutils.privateAccess(types.Connection)
   C.xcb_aux_sync(conn.ct)
 
 

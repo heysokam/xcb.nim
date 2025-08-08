@@ -2,6 +2,7 @@
 #  xcb.nim  |  Copyright (C) Ivan Mar (sOkam!)  |  MPL-2.0  :
 #:___________________________________________________________
 # @deps xcb
+import ./internal/pragmas
 from ./raw as C import nil
 
 
@@ -13,16 +14,16 @@ func none *(_:typedesc[ScreenID]) :ScreenID= int.high.ScreenID
 func `==` *(A,B :ScreenID) :bool {.borrow.}
 
 type Screen * = object
-  ct  :ptr C.xcb_screen_t= nil
+  ct  *{.readonly.}:ptr C.xcb_screen_t= nil
 
 
 #_______________________________________
 # @section Connection
 #_____________________________
 type Connection * = object
-  ct       :ptr C.xcb_connection_t= nil
-  display  :string= ""  ## Uses the `$DISPLAY` env variable when ""
-  screen   :ScreenID= ScreenID.none()
+  ct       *{.readonly.}:ptr C.xcb_connection_t= nil
+  display  *{.readonly.}:string= ""  ## Uses the `$DISPLAY` env variable when ""
+  screen   *{.readonly.}:ScreenID= ScreenID.none()
 
 type ConnectionStatus *{.pure.}= enum
   Ok, Error,                     ## Socket errors, Pipe errors or other Stream errors
@@ -38,6 +39,6 @@ type ConnectionStatus *{.pure.}= enum
 # @section Window
 #_____________________________
 type Window * = object
-  ct       :C.xcb_window_t
-  visible  :bool= true
+  ct       *{.readonly.}:C.xcb_window_t
+  visible  *{.readonly.}:bool= true
 

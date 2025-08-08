@@ -2,11 +2,10 @@
 #  xcb.nim  |  Copyright (C) Ivan Mar (sOkam!)  |  MPL-2.0  :
 #:___________________________________________________________
 # @deps std
-from std/importutils import nil
 # @deps xcb
 from ./internal/helpers import width, height
 from ./raw as C import nil
-import ./types {.all.}
+import ./types as xcb
 
 
 #_______________________________________
@@ -30,8 +29,6 @@ func map *(
     win        : Window;
     connection : Connection;
   ) :void=
-  importutils.privateAccess(types.Connection)
-  importutils.privateAccess(types.Window)
   let response = C.xcb_map_window(connection.ct, win.ct)
   discard response # FIX: Do we need to do anything with this cookie
 
@@ -44,9 +41,6 @@ func create *(_:typedesc[Window];
     border     : uint            = window.default_border;      ## Size of the window border in pixels
     visible    : bool            = window.default_visibility;  ## Will map the window by default when omitted (aka true)
   ) :Window=
-  importutils.privateAccess(types.Connection)
-  importutils.privateAccess(types.Screen)
-  importutils.privateAccess(types.Window)
   result    = Window(visible:visible)
   result.ct = C.xcb_generate_id(connection.ct)
   let response :C.xcb_void_cookie_t= C.xcb_create_window(
