@@ -11,15 +11,68 @@ import ./types as xcb
 #_______________________________________
 # @section Window: Helper Types
 #_____________________________
-type Position * = helpers.UVec2
-type Size     * = helpers.Size2D
+type Position   * = helpers.UVec2
+type Size       * = helpers.Size2D
+type Event *{.pure.}= enum
+  # @WARN: MUST match the order of xcb_event_mask_t
+  Key_press,             ## XCB_EVENT_MASK_KEY_PRESS = 1
+  Key_release,           ## XCB_EVENT_MASK_KEY_RELEASE = 2
+  Button_press,          ## XCB_EVENT_MASK_BUTTON_PRESS = 4
+  Button_release,        ## XCB_EVENT_MASK_BUTTON_RELEASE = 8
+  Window_enter,          ## XCB_EVENT_MASK_ENTER_WINDOW = 16
+  Window_leave,          ## XCB_EVENT_MASK_LEAVE_WINDOW = 32
+  Pointer_motion,        ## XCB_EVENT_MASK_POINTER_MOTION = 64
+  Pointer_motionHint,    ## XCB_EVENT_MASK_POINTER_MOTION_HINT = 128
+  Button1_motion,        ## XCB_EVENT_MASK_BUTTON_1_MOTION = 256
+  Button2_motion,        ## XCB_EVENT_MASK_BUTTON_2_MOTION = 512
+  Button3_motion,        ## XCB_EVENT_MASK_BUTTON_3_MOTION = 1024
+  Button4_motion,        ## XCB_EVENT_MASK_BUTTON_4_MOTION = 2048
+  Button5_motion,        ## XCB_EVENT_MASK_BUTTON_5_MOTION = 4096
+  Button_motion,         ## XCB_EVENT_MASK_BUTTON_MOTION = 8192
+  KeyMap_state,          ## XCB_EVENT_MASK_KEYMAP_STATE = 16384
+  Exposure,              ## XCB_EVENT_MASK_EXPOSURE = 32768
+  Visibility_change,     ## XCB_EVENT_MASK_VISIBILITY_CHANGE = 65536
+  Structure_notify,      ## XCB_EVENT_MASK_STRUCTURE_NOTIFY = 131072
+  Resize_redirect,       ## XCB_EVENT_MASK_RESIZE_REDIRECT = 262144
+  Substructure_notify,   ## XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY = 524288
+  Substructure_redirect, ## XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT = 1048576
+  Change_focus,          ## XCB_EVENT_MASK_FOCUS_CHANGE = 2097152
+  Change_property,       ## XCB_EVENT_MASK_PROPERTY_CHANGE = 4194304
+  Change_colorMap,       ## XCB_EVENT_MASK_COLOR_MAP_CHANGE = 8388608
+  Grab_ownerButton,      ## XCB_EVENT_MASK_OWNER_GRAB_BUTTON = 1677721
+#___________________
+type SignUp * = object
+  events  *:set[window.Event]= {}
+
 
 #_______________________________________
 # @section Window: Helper Constants
 #_____________________________
+# Default Options
 const default_size        *:window.Position = window.Size(x:100, y:100)
 const default_border      *:uint            = 10;
 const default_visibility  *:bool            = true;
+#___________________
+# SignUp Presets
+const signup_Exposure = xcb.Value(
+  mask: C.XCB_CW_EVENT_MASK.uint32,
+  list: @[C.XCB_EVENT_MASK_EXPOSURE.uint32],
+  ) #:: signup.exposure
+
+
+#_______________________________________
+# @section Window: SignUp
+#_____________________________
+# SignUp Presets
+func none     *[T :window.SignUp](_:typedesc[T]) :T=  T()
+func exposure *[T :window.SignUp](_:typedesc[T]) :T=  T(events: {Exposure})
+#___________________
+# xcb.Value helpers
+func merge *[T :xcb.Value](A,B :T) :T= T() # FIX: Implement and private
+func toValue (signup :window.SignUp) :xcb.Value=
+  # FIX: Implement correctly
+  if window.Event.Exposure in signup.events: return signup_Exposure
+  else: return xcb.Value()
 
 
 #_______________________________________
@@ -39,11 +92,12 @@ func create *(_:typedesc[Window];
     position   : window.Position = Position();
     size       : window.Size     = window.default_size;        ## Size of the window in pixels
     border     : uint            = window.default_border;      ## Size of the window border in pixels
+    signup     : window.Signup   = Signup.none();              ## Does not signup for anything by default
     visible    : bool            = window.default_visibility;  ## Will map the window by default when omitted (aka true)
   ) :Window=
   result    = Window(visible:visible)
   result.ct = C.xcb_generate_id(connection.ct)
-  const value = Value() # TODO: Configurable. Not used yet.
+  let value = signup.toValue()
   let response :C.xcb_void_cookie_t= C.xcb_create_window(
     c              = connection.ct,                               # Pointer to the xcb_connection_t structure
     depth          = C.XCB_COPY_FROM_PARENT.uint8,                # TODO: Configurable. Depth of the screen (same as root)

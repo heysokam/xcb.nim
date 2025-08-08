@@ -5,7 +5,7 @@
 from ./raw as C import nil
 import ./types as xcb
 from ./screen   import create
-from ./window   import create, Position
+from ./window   import create, Position, none
 from ./graphics import create
 
 
@@ -83,10 +83,11 @@ func create *(conn :var Connection; _:typedesc[Window];
     position   : window.Position = Position();
     size       : window.Size     = window.default_size;        ## Size of the window in pixels
     border     : uint            = window.default_border;      ## Size of the window border in pixels
+    signup     : window.SignUp   = window.SignUp.none();       ## Does not signup for anything by default
     visible    : bool            = window.default_visibility;  ## Will map the window by default when omitted (aka true)
   ) :Window=
   ## @descr Alias to `Window.create` for ergonomics
-  Window.create(conn, screen, position, size, border, visible)
+  Window.create(conn, screen, position, size, border, signup, visible)
 #___________________
 func create *(conn :var Connection; _:typedesc[Graphics];
     screen : Screen;

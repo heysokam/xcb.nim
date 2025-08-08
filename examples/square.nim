@@ -18,7 +18,7 @@ func init () :Example=
   result.connection.validate()
   # Perform X-related initialization.
   result.screen     = result.connection.create(Screen)
-  result.window     = result.connection.create(Window,   result.screen)
+  result.window     = result.connection.create(Window,   result.screen, signup= window.SignUp.exposure())
   result.foreground = result.connection.create(Graphics, result.screen)
   result.connection.wait()
   debugEcho result.screen.report()
