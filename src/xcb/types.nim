@@ -7,6 +7,14 @@ from ./raw as C import nil
 
 
 #_______________________________________
+# @section Value Slice
+#_____________________________
+type Value * = object
+  mask  *:uint32     = 0
+  list  *:seq[uint32]= @[]  ## Must be in the order listed by xcb_gc_t
+
+
+#_______________________________________
 # @section Screen
 #_____________________________
 type ScreenID * = distinct int

@@ -43,6 +43,7 @@ func create *(_:typedesc[Window];
   ) :Window=
   result    = Window(visible:visible)
   result.ct = C.xcb_generate_id(connection.ct)
+  const value = Value() # TODO: Configurable. Not used yet.
   let response :C.xcb_void_cookie_t= C.xcb_create_window(
     c              = connection.ct,                               # Pointer to the xcb_connection_t structure
     depth          = C.XCB_COPY_FROM_PARENT.uint8,                # TODO: Configurable. Depth of the screen (same as root)
@@ -55,9 +56,9 @@ func create *(_:typedesc[Window];
     border_width   = border.uint16,                               # Width of the window's border (in pixels)
     internal_class = C.XCB_WINDOW_CLASS_INPUT_OUTPUT.ord.uint16,  # ??
     visual         = screen.ct.root_visual,                       # TODO: Configurable. Specifies the id for the new window’s visual
-    value_mask     = 0,                                           # TODO: Configurable. Not used yet.
-    value_list     = nil,                                         # TODO: Configurable. Not used yet.
-    ) #:: response = xcb_create_window( ... )
+    value_mask     = value.mask,
+    value_list     = if value.list.len == 0: nil else: value.list[0].addr,
+    ) #:: response = xcb_create_window
   discard response # TODO: Use `xcb_create_window_checked` and check for errors directly
   if result.visible: result.map(connection)
 
