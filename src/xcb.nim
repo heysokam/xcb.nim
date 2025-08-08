@@ -7,3 +7,4 @@
 {.passL:"-lxcb-util".}
 import ./xcb/types      ; export types
 import ./xcb/connection ; export connection
+import ./xcb/screen     ; export screen

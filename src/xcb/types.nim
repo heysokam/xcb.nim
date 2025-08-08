@@ -4,21 +4,24 @@
 import ./raw as C
 
 
-#_________________________________________________
-# @section Screen
 #_______________________________________
+# @section Screen
+#_____________________________
 type ScreenID * = distinct int
 func none *(_:typedesc[ScreenID]) :ScreenID= int.high.ScreenID
 func `==` *(A,B :ScreenID) :bool {.borrow.}
 
+type Screen * = object
+  ct  :ptr C.xcb_screen_t= nil
 
-#_________________________________________________
-# @section Connection
+
 #_______________________________________
+# @section Connection
+#_____________________________
 type Connection * = object
-  ct      :ptr C.xcb_connection_t= nil
-  name    :string= ""
-  screen  :ScreenID= ScreenID.none()
+  ct       :ptr C.xcb_connection_t= nil
+  display  :string= ""  ## Uses the `$DISPLAY` env variable when ""
+  screen   :ScreenID= ScreenID.none()
 
 type ConnectionStatus *{.pure.}= enum
   Ok, Error,                     ## Socket errors, Pipe errors or other Stream errors

@@ -8,15 +8,15 @@ import ./raw as C
 import ./types {.all.}
 
 
-#_________________________________________________
-# @section Connection: Errors
 #_______________________________________
+# @section Connection: Errors
+#_____________________________
 type ConnectionError = object of CatchableError
 
 
-#_________________________________________________
-# @section Connection: Status
 #_______________________________________
+# @section Connection: Status
+#_____________________________
 func `<`  *(A :ConnectionStatus; B :cint) :bool= A.ord < B
 func `<=` *(A :ConnectionStatus; B :cint) :bool= A.ord <= B
 func toConnectionStatus (err :cint) :ConnectionStatus=
@@ -31,17 +31,17 @@ func toConnectionStatus (err :cint) :ConnectionStatus=
   else                                  : ConnectionStatus.Unknown
 
 
-#_________________________________________________
-# @section Connection: Context
 #_______________________________________
+# @section Connection: Context
+#_____________________________
 func create *(_:typedesc[Connection];
-    name   : string = "";
+    display : string = "";  ## Uses the `$DISPLAY` env variable when omitted
   ) :Connection=
   importutils.privateAccess(types.Connection)
-  result = Connection(name:name)
+  result = Connection(display:display)
   var id :cint= cint.high()
   result.ct = C.xcb_connect(
-    displayname = if result.name == "": nil else: result.name.cstring,
+    displayname = if result.display == "": nil else: result.display.cstring,
     screenp     = id.addr,
     ) #:: result.ct
   result.screen = id.ScreenID
@@ -58,4 +58,20 @@ func hasError *(conn :Connection) :ConnectionStatus=
 func validate *(conn :Connection) :void=
   let status = conn.hasError()
   if status < ConnectionStatus.Ok: raise newException(ConnectionError, "The connection to the X server has an error: Status." & $status)
+
+
+#_______________________________________
+# @section Connection: Screen
+#_____________________________
+func get *(conn :var Connection; _:typedesc[Screen]) :Screen=
+  importutils.privateAccess(types.Connection)
+  importutils.privateAccess(types.Screen)
+  result = Screen()
+
+  var iter :C.xcb_screen_iterator_t= C.xcb_setup_roots_iterator(C.xcb_get_setup(conn.ct))
+  while iter.rem.bool:
+    # TODO: This `conn.screen == ScreenID(0)` check feels incorrect/wrong
+    if conn.screen == ScreenID(0): result.ct = iter.data
+    conn.screen.dec
+    C.xcb_screen_next(iter.addr)
 

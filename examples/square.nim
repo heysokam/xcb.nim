@@ -4,7 +4,8 @@
 import pkg/xcb
 
 type Example = object
-  connection :xcb.Connection
+  connection  :xcb.Connection
+  screen      :xcb.Screen
 
 
 func init () :Example=
@@ -13,6 +14,8 @@ func init () :Example=
   # Connect to the X server.
   result.connection = xcb.Connection.create()
   result.connection.validate()
+  result.screen = result.connection.get(Screen)
+  debugEcho result.screen.report()
   # Perform X-related initialization.
   return result
 
