@@ -60,6 +60,16 @@ func validate *(conn :Connection) :void=
   let status = conn.hasError()
   if status < ConnectionStatus.Ok: raise newException(ConnectionError, "The connection to the X server has an error: Status." & $status)
 
+func wait *(conn :Connection) :void=
+  ## @descr Forces any buffered output to be written to the server. Blocks until the write is complete.
+  ## @note Originally named `xcb_flush`
+  importutils.privateAccess(types.Connection)
+  let errored = C.xcb_flush(conn.ct) <= 0
+  if errored: raise newException(ConnectionError, "The connection to the X server failed to wait for all commands in the buffer to be cleared.")
+
+func flush *(conn :Connection) :void {.inline.}= conn.wait()
+  ## Alias to `Connection.wait` for familiarity with the C api
+
 
 #_______________________________________
 # @section Connection: Request Aliases
