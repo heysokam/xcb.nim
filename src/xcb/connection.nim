@@ -69,7 +69,12 @@ func wait *(conn :Connection) :void=
   if errored: raise newException(ConnectionError, "The connection to the X server failed to wait for all commands in the buffer to be cleared.")
 
 func flush *(conn :Connection) :void {.inline.}= conn.wait()
-  ## Alias to `Connection.wait` for familiarity with the C api
+  ## @descr Alias to `Connection.wait` for familiarity with the C api
+
+func sync *(conn :Connection) :void=
+  ## @descr Writes all pending requests to the X server, and waits until the X server has finished processing them.
+  importutils.privateAccess(types.Connection)
+  C.xcb_aux_sync(conn.ct)
 
 
 #_______________________________________
