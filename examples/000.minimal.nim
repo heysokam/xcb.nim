@@ -1,8 +1,9 @@
 #:___________________________________________________________
 #  xcb.nim  |  Copyright (C) Ivan Mar (sOkam!)  |  MPL-2.0  :
 #:___________________________________________________________
-##! @fileoverview Minimal example of how to use xcb.nim
-#_______________________________________________________|
+## Minimal example of how to use xcb.nim
+## Same as the readme's introductory code.
+#___________________________________________|
 import pkg/xcb
 
 # Connect to the X server
