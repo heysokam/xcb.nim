@@ -42,8 +42,10 @@ type Event *{.pure.}= enum
   Change_colorMap,       ## XCB_EVENT_MASK_COLOR_MAP_CHANGE = 8388608
   Grab_ownerButton,      ## XCB_EVENT_MASK_OWNER_GRAB_BUTTON = 1677721
 #___________________
+const SignUp_backPixel_none = uint32.high
 type SignUp * = object
-  events  *:set[window.Event]= {}
+  events      *:set[window.Event]= {}
+  back_pixel  *:uint32= SignUp_backPixel_none
 func none *[T :window.SignUp](_:typedesc[T]) :T=  T()
 
 
@@ -63,16 +65,34 @@ const default_visibility  *:bool            = true;
 func merge *[T :xcb.Value](A,B :T) :T= T() # FIX: Implement and private
 #___________________
 # SignUp Helpers
-func toValue (signup :window.SignUp) :xcb.Value=
-  # FIX: Implement correctly
+template next_cw (
+    value : var xcb.Value;
+    id    : var int;
+    cw    : C.xcb_cw_t;
+    body  : untyped
+  ) :untyped=
+  id.inc
+  value.list.add(0)
+  value.mask = value.mask or cw.uint32
+  body
+#___________________
+func toValue (
+    signup : window.SignUp;
+  ) :xcb.Value=
+  # FIX: Implement the other cases
   result = xcb.Value()
   var id :int= -1
+
+  # Back Pixel : 2
+  if signup.back_pixel != SignUp_backPixel_none:
+    result.next_cw id, C.XCB_CW_BACK_PIXEL:
+      result.list[id] = signup.back_pixel
+
   # Events : 2048
-  id.inc
-  result.list.add(0)
-  result.mask = result.mask or C.XCB_CW_EVENT_MASK.uint32
-  for entry in window.Event:
-    if entry in signup.events: result.list[id].setBit(entry.ord)
+  if signup.events.len != 0:
+    result.next_cw id, C.XCB_CW_EVENT_MASK:
+      for entry in window.Event:
+        if entry in signup.events: result.list[id].setBit(entry.ord)
 
 
 #_______________________________________

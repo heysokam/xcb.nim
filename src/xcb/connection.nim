@@ -16,10 +16,6 @@ type ConnectionError = object of CatchableError
 
 
 #_______________________________________
-# @section Connection: Status
-#_____________________________
-
-#_______________________________________
 # @section Connection: Context
 #_____________________________
 func create *(_:typedesc[Connection];

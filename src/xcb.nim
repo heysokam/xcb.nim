@@ -10,3 +10,4 @@ import ./xcb/connection ; export connection
 import ./xcb/screen     ; export screen
 import ./xcb/window     ; export window
 import ./xcb/graphics   ; export graphics
+import ./xcb/event      ; export event
