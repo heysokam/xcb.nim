@@ -6,7 +6,7 @@ when not defined(nimscript): import system/nimscript # Silence LSP errors
 #_____________________________
 # Package Information
 packageName  = "xcb_nim"
-version      = "0.1.0"
+version      = "0.1.1"
 author       = "heysokam"
 description  = "xcb.nim | Nimmified bindings for XCB"
 license      = "MPL-2.0"

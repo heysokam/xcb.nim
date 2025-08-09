@@ -34,3 +34,9 @@ func create *(_:typedesc[Screen]; conn :var Connection) :Screen=
     conn.screen.dec
     C.xcb_screen_next(iter.addr)
 
+
+#_______________________________________
+# @section Screen: Data Helpers
+#_____________________________
+func root *(scr :Screen) :uint32= scr.ct.root
+
