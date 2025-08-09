@@ -90,3 +90,17 @@ nim c --path:path/to/xcb/src yourapp.nim
 Development maintains a reasonable list of versions, tagged automatically with [graffiti](https://github.com/beef331/graffiti).  
 > i.e: There is no need to use `@head` in the package name to access the latest version.
 
+
+## License & Usage
+This project is covered under the [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/FAQ/).
+
+The [MPL v2.0](https://www.mozilla.org/en-US/MPL/2.0/FAQ/) is a per-file weak copyleft license.  
+
+Just like with MIT, you _can_ use this project in a closed source application,  
+without the license spreading to your own files, or having to build the code into a dynamic library.  
+_(ie: like GPL/LGPL would require)_  
+If you don't modify anything, you can use _(and relicense)_ the code into your app as if it was MIT/BSD.  
+
+The MPL is a not-so-well-known license.  
+Please read their [FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/) if you were not aware of its existence.  
+
