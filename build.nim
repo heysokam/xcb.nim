@@ -14,7 +14,7 @@ const futhark = Dependency.new( "futhark", "https://github.com/PMunch/futhark"  
 #_______________________________________
 # @section Examples: Build Instructions
 confy.cfg.dirs.src = "examples"
-let square = Program.new("square.nim")
+let example_001 = Program.new("001.clearWindow.nim")
 
 #_______________________________________
 # @section C bindings generator
@@ -32,5 +32,5 @@ when isMainModule:
   # Generate the C bindings
   xcb_gen()
   # Build the Examples
-  square.build.run
+  example_001.build.run
 
