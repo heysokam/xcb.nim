@@ -38,5 +38,5 @@ func create *(_:typedesc[Screen]; conn :var Connection) :Screen=
 #_______________________________________
 # @section Screen: Data Helpers
 #_____________________________
-func root *(scr :Screen) :uint32= scr.ct.root
+func root *(scr :Screen) :xcb.Window= xcb.Window(ct: scr.ct.root)
 
