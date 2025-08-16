@@ -7,6 +7,12 @@ from ./raw as C import nil
 
 
 #_______________________________________
+# @section Type Aliases
+#_____________________________
+type Reply_generic * = C.xcb_void_cookie_t
+
+
+#_______________________________________
 # @section Value Slice
 #_____________________________
 type Value * = object
@@ -45,7 +51,6 @@ type ConnectionStatus *{.pure.}= enum
 func `<`  *(A :ConnectionStatus; B :cint) :bool= A.ord < B
 func `<=` *(A :ConnectionStatus; B :cint) :bool= A.ord <= B
 func toConnectionStatus *(err :cint) :ConnectionStatus= ConnectionStatus(err)
-
 
 
 #_______________________________________
