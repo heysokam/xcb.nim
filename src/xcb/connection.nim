@@ -4,15 +4,11 @@
 # @deps xcb
 from ./raw as C import nil
 import ./types as xcb
+import ./errors
 from ./screen   import create
 from ./window   import create, Position, none
 from ./graphics import create
-
-
-#_______________________________________
-# @section Connection: Errors
-#_____________________________
-type ConnectionError = object of CatchableError
+from ./request  import hasError
 
 
 #_______________________________________
@@ -52,6 +48,14 @@ func flush *(conn :Connection) :void {.inline.}= conn.wait()
 func sync *(conn :Connection) :void=
   ## @descr Writes all pending requests to the X server, and waits until the X server has finished processing them.
   C.xcb_aux_sync(conn.ct)
+
+func server_grab *(conn :Connection) :void=
+  let reply = C.xcb_grab_server_checked(conn.ct)
+  if reply.hasError(conn): raise newException(ConnectionError, "The connection to the X server failed to grab the server.")
+
+func server_ungrab *(conn :Connection) :void=
+  let reply = C.xcb_ungrab_server_checked(conn.ct)
+  if reply.hasError(conn): raise newException(ConnectionError, "The connection to the X server failed to ungrab the server.")
 
 
 #_______________________________________
