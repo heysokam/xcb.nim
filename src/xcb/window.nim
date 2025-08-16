@@ -142,7 +142,6 @@ func change *(
     signup : window.SignUp;
     conn   : Connection;
   ) :bool {.discardable.}=
-  ## @WARN: Not implemented. Does nothing.
   let value = signup.toValue()
   let reply = C.xcb_change_window_attributes_checked(
     c          = conn.ct,
