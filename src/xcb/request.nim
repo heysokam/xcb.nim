@@ -7,6 +7,6 @@ import ./types
 
 
 func hasError *(reply :Reply_generic; conn :Connection) :bool=
-  ## @descr Returns whether or not the given response contains an error or not
+  ## @descr Returns whether the given response contains an error or not
   return C.xcb_request_check(conn.ct, reply) != nil
 
