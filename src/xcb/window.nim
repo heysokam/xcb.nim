@@ -7,6 +7,8 @@ from std/bitops import setBit
 from ./internal/helpers import width, height
 from ./raw as C import nil
 import ./types as xcb
+import ./errors
+import ./request
 
 
 #_______________________________________
@@ -136,11 +138,17 @@ func create *(_:typedesc[Window];
   if result.visible: result.map(connection)
 
 func change *(
-    win    : var Window;
+    win    : Window;
     signup : window.SignUp;
-  ) :void=
+    conn   : Connection;
+  ) :bool {.discardable.}=
   ## @WARN: Not implemented. Does nothing.
-  # TODO: Figure out how to implement.
-  # C.xcb_change_window_attributes(c, win, XCB_CW_EVENT_MASK, values);
-  discard (win, signup)
+  let value = signup.toValue()
+  let reply = C.xcb_change_window_attributes_checked(
+    c          = conn.ct,
+    window     = win.ct,
+    value_mask = value.mask,
+    value_list = if value.list.len == 0: nil else: value.list[0].addr,
+    ) #:: reply = xcb_change_window_attributes_checked
+  result = reply.hasError(conn)
 
