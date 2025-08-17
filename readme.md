@@ -55,13 +55,13 @@ You can find more examples and usecases in the the @[examples](./examples/) fold
 You can drop down to the Raw C bindings with [`import xcb/raw`](./src/xcb/raw.nim) at any point.  
 Every nimmified object contains a `.ct` field that gives you access to the object that the C bindings require:  
 ```nim
-import xcb      # Nim API
-import xcb/raw  # C API
-let connection = xcb.Connection.create()
-let id         = xcb_generate_id(connection.ct)
+import xcb as Nim
+import xcb/raw as C
+let connection = Nim.Connection.create()
+let id         = C.xcb_generate_id(connection.ct)
 ```
 
-The raw bindings are generated with [`futhark`](https://github.com/PMunch/futhark),  
+The raw bindings are generated with [`futhark`](https://github.com/PMunch/futhark) with the [`generator.nim`](./src/xcb/generator.nim) file,  
 and commited to the repository for clarity and ease of development.  
 
 
