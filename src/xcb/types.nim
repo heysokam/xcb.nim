@@ -123,3 +123,11 @@ type Event * = object
   ct    *{.readonly.}:ptr C.xcb_generic_event_t= nil
   kind  *{.readonly.}:EventKind= None
 
+
+#_______________________________________
+# @section Time
+#_____________________________
+type Time *{.pure, size:sizeof(uint32).}= enum Current = C.XCB_TIME_CURRENT_TIME.ord
+converter toTime   *(val :uint32) :Time= Time(val)
+converter toNumber *(val :Time) :uint32= val.ord.uint32
+
