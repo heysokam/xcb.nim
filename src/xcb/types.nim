@@ -157,7 +157,7 @@ type Event * = object
 # @section Time
 #_____________________________
 type Time *{.pure, size:sizeof(uint32).}= enum Current = C.XCB_TIME_CURRENT_TIME.ord
-converter toTime   *(val :uint32) :Time= Time(val)
+converter toTime   *(val :uint32) :Time= cast[Time](val)
 converter toNumber *(val :Time) :uint32= val.ord.uint32
 
 
