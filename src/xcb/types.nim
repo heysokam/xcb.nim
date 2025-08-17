@@ -131,3 +131,31 @@ type Time *{.pure, size:sizeof(uint32).}= enum Current = C.XCB_TIME_CURRENT_TIME
 converter toTime   *(val :uint32) :Time= Time(val)
 converter toNumber *(val :Time) :uint32= val.ord.uint32
 
+
+#_______________________________________
+# @section Input: General
+#_____________________________
+type Modifier *{.pure.}= enum todo
+type Modifiers * = set[Modifier]
+func to *[T](val :Modifiers; t :typedesc[T]) :T= cast[T](val)
+type GrabMode * = enum Sync, Async
+
+
+#_______________________________________
+# @section Input: Mouse Cursor & Pointer
+#_____________________________
+type Cursor * = object
+  ct  *{.readonly.}:C.xcb_cursor_t
+
+
+#_______________________________________
+# @section Input: Mouse Button
+#_____________________________
+type ButtonEvent  * = enum todo
+type ButtonEvents * = set[ButtonEvent]
+func to *[T](val :ButtonEvents; t :typedesc[T]) :T= cast[T](val)
+type Button * = object
+  ct         *{.readonly.}:uint8
+  events     *{.readonly.}:ButtonEvents
+  modifiers  *{.readonly.}:Modifiers
+
