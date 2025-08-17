@@ -164,9 +164,21 @@ converter toNumber *(val :Time) :uint32= val.ord.uint32
 #_______________________________________
 # @section Input: General
 #_____________________________
-type Modifier *{.pure.}= enum todo
+type Modifier *{.pure.}= enum
+  Shift, # XCB_MOD_MASK_SHIFT   =   1
+  Lock,  # XCB_MOD_MASK_LOCK    =   2
+  Ctrl,  # XCB_MOD_MASK_CONTROL =   4
+  Mod1,  # XCB_MOD_MASK_1       =   8
+  Mod2,  # XCB_MOD_MASK_2       =  16
+  Mod3,  # XCB_MOD_MASK_3       =  32
+  Mod4,  # XCB_MOD_MASK_4       =  64
+  Mod5,  # XCB_MOD_MASK_5       = 128
 type Modifiers * = set[Modifier]
+template none *(_:typedesc[Modifier|Modifiers]) :Modifiers= {}
+template all  *(_:typedesc[Modifier|Modifiers]) :Modifiers= {Shift, Lock, Ctrl, Mod1, Mod2, Mod3, Mod4, Mod5}
+template any  *(_:typedesc[Modifier|Modifiers]) :Modifiers= Modifiers.all()
 func to *[T](val :Modifiers; t :typedesc[T]) :T= cast[T](val)
+#___________________
 type GrabMode * = enum Sync, Async
 
 
