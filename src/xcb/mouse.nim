@@ -14,12 +14,13 @@ func pointer_grab *(
     cursor        : xcb.Cursor   = xcb.Cursor(ct: C.xcb_cursor_t(C.XCB_NONE));
     mode_pointer  : xcb.GrabMode = xcb.GrabMode.Async;
     mode_keyboard : xcb.GrabMode = xcb.GrabMode.Async;
-    confined      : bool         = false;
     time          : xcb.Time     = xcb.Time.Current;
+    confined      : bool         = false;
+    owner_events  : bool         = false;
   ) :void=
   let reply = xcb.Request(kind: xcb.RequestKind.PointerGrab, pointer_grab: C.xcb_grab_pointer(
     c             = conn.ct,
-    owner_events  = 0,                  # uint8   # FIX: Configurable
+    owner_events  = owner_events.uint8,
     grab_window   = window.ct,
     event_mask    = C.XCB_NONE.uint16,  # uint16  # FIX: Configurable
     pointer_mode  = mode_pointer.ord.uint8,
@@ -43,7 +44,7 @@ func grab *(
     mode_pointer  : xcb.GrabMode = xcb.GrabMode.Async;
     mode_keyboard : xcb.GrabMode = xcb.GrabMode.Async;
     confined      : bool         = false;
-    owner_events  : bool         = true;
+    owner_events  : bool         = false;
   ) :void=
   let reply = xcb.Request(kind: xcb.RequestKind.Generic, generic: C.xcb_grab_button_checked(
     c             = conn.ct,
