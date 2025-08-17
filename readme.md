@@ -68,7 +68,7 @@ and commited to the repository for clarity and ease of development.
 ## Installation
 ### Nimble
 `xcb.nim` is published on Nimble's directory of packages.  
-To start using it can add it as a dependency:
+To start using it, add it as a dependency in your `.nimble` file:  
 ```nim
 # yourapp.nimble
 requires "xcb_nim"
