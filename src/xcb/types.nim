@@ -192,9 +192,16 @@ type Cursor * = object
 #_______________________________________
 # @section Input: Mouse Button
 #_____________________________
-type ButtonEvent  * = enum todo
+type ButtonEvent  * = enum Press, Release
 type ButtonEvents * = set[ButtonEvent]
-func to *[T](val :ButtonEvents; t :typedesc[T]) :T= cast[T](val)
+template none *(_:typedesc[ButtonEvent|ButtonEvents]) :ButtonEvents= {}
+template all  *(_:typedesc[ButtonEvent|ButtonEvents]) :ButtonEvents= {Press, Release}
+template any  *(_:typedesc[ButtonEvent|ButtonEvents]) :ButtonEvents= ButtonEvents.all()
+func to *[T](val :ButtonEvents; _:typedesc[T]) :T= cast[T](val)
+func toMask *[T](events :ButtonEvents; _:typedesc[T]) :T=
+  result = default(T)
+  if ButtonEvent.Press   in events: result = result or EventFlag.Button_press.ord
+  if ButtonEvent.Release in events: result = result or EventFlag.Button_release.ord
 #___________________
 type ButtonID *{.pure, size:sizeof(uint8).}= enum
   Any      = C.XCB_BUTTON_INDEX_ANY,
