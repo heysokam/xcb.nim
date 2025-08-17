@@ -81,6 +81,35 @@ type Graphics * = object
 #_______________________________________
 # @section Events
 #_____________________________
+type EventFlag *{.pure, size:sizeof(uint).}= enum
+  Key_press,             # XCB_EVENT_MASK_KEY_PRESS             =        1,
+  Key_release,           # XCB_EVENT_MASK_KEY_RELEASE           =        2,
+  Button_press,          # XCB_EVENT_MASK_BUTTON_PRESS          =        4,
+  Button_release,        # XCB_EVENT_MASK_BUTTON_RELEASE        =        8,
+  Window_enter,          # XCB_EVENT_MASK_ENTER_WINDOW          =       16,
+  Window_leave,          # XCB_EVENT_MASK_LEAVE_WINDOW          =       32,
+  Motion_pointer,        # XCB_EVENT_MASK_POINTER_MOTION        =       64,
+  Motion_hint,           # XCB_EVENT_MASK_POINTER_MOTION_HINT   =      128,
+  Motion_button1,        # XCB_EVENT_MASK_BUTTON_1_MOTION       =      256,
+  Motion_button2,        # XCB_EVENT_MASK_BUTTON_2_MOTION       =      512,
+  Motion_button3,        # XCB_EVENT_MASK_BUTTON_3_MOTION       =     1024,
+  Motion_button4,        # XCB_EVENT_MASK_BUTTON_4_MOTION       =     2048,
+  Motion_button5,        # XCB_EVENT_MASK_BUTTON_5_MOTION       =     4096,
+  Motion_button,         # XCB_EVENT_MASK_BUTTON_MOTION         =     8192,
+  Keymap_state,          # XCB_EVENT_MASK_KEYMAP_STATE          =    16384,
+  Exposure,              # XCB_EVENT_MASK_EXPOSURE              =    32768,
+  Visibility_change,     # XCB_EVENT_MASK_VISIBILITY_CHANGE     =    65536,
+  Structure_notify,      # XCB_EVENT_MASK_STRUCTURE_NOTIFY      =   131072,
+  Resize_redirect,       # XCB_EVENT_MASK_RESIZE_REDIRECT       =   262144,
+  SubStructure_notify,   # XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY   =   524288,
+  SubStructure_redirect, # XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT =  1048576,
+  Focus_change,          # XCB_EVENT_MASK_FOCUS_CHANGE          =  2097152,
+  Property_change,       # XCB_EVENT_MASK_PROPERTY_CHANGE       =  4194304,
+  ColorMap_change,       # XCB_EVENT_MASK_COLOR_MAP_CHANGE      =  8388608,
+  Button_grab,           # XCB_EVENT_MASK_OWNER_GRAB_BUTTON     = 16777216
+type EventFlags * = set[EventFlag]
+func none *(_:typedesc[EventFlag|EventFlags]) :EventFlags= {}  # XCB_EVENT_MASK_NO_EVENT = 0
+#___________________
 type EventKind *{.pure, size:sizeof(uint8).}= enum
   None              = C.XCB_NONE.int,
   Request           = C.XCB_REQUEST,
