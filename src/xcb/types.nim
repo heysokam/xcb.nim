@@ -195,6 +195,15 @@ type Cursor * = object
 type ButtonEvent  * = enum todo
 type ButtonEvents * = set[ButtonEvent]
 func to *[T](val :ButtonEvents; t :typedesc[T]) :T= cast[T](val)
+#___________________
+type ButtonID *{.pure, size:sizeof(uint8).}= enum
+  Any      = C.XCB_BUTTON_INDEX_ANY,
+  Left     = C.XCB_BUTTON_INDEX_1,
+  Right    = C.XCB_BUTTON_INDEX_2,
+  Middle   = C.XCB_BUTTON_INDEX_3,
+  Scroll0  = C.XCB_BUTTON_INDEX_4,
+  Scroll1  = C.XCB_BUTTON_INDEX_5,
+#___________________
 type Button * = object
   id         *{.readonly.}:ButtonID
   events     *{.readonly.}:ButtonEvents= ButtonEvents.all
