@@ -143,11 +143,11 @@ func change *(
     conn   : Connection;
   ) :bool {.discardable.}=
   let value = signup.toValue()
-  let reply = C.xcb_change_window_attributes_checked(
+  let reply = xcb.Request(kind: xcb.RequestKind.Generic, generic: C.xcb_change_window_attributes_checked(
     c          = conn.ct,
     window     = win.ct,
     value_mask = value.mask,
     value_list = if value.list.len == 0: nil else: value.list[0].addr,
-    ) #:: reply = xcb_change_window_attributes_checked
+    )) #:: reply = xcb_change_window_attributes_checked
   result = reply.hasError(conn)
 

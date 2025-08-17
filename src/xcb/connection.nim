@@ -50,11 +50,11 @@ func sync *(conn :Connection) :void=
   C.xcb_aux_sync(conn.ct)
 
 func server_grab *(conn :Connection) :void=
-  let reply = C.xcb_grab_server_checked(conn.ct)
+  let reply = xcb.Request(kind: xcb.RequestKind.Generic, generic: C.xcb_grab_server_checked(conn.ct))
   if reply.hasError(conn): raise newException(ConnectionError, "The connection to the X server failed to grab the server.")
 
 func server_ungrab *(conn :Connection) :void=
-  let reply = C.xcb_ungrab_server_checked(conn.ct)
+  let reply = xcb.Request(kind: xcb.RequestKind.Generic, generic: C.xcb_ungrab_server_checked(conn.ct))
   if reply.hasError(conn): raise newException(ConnectionError, "The connection to the X server failed to ungrab the server.")
 
 

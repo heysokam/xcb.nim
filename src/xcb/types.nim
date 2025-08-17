@@ -7,9 +7,19 @@ from ./raw as C import nil
 
 
 #_______________________________________
-# @section Type Aliases
+# @section Request & Reply
 #_____________________________
-type Reply_generic * = C.xcb_void_cookie_t
+type RequestKind *{.pure.}= enum Generic, PointerGrab
+#___________________
+type Request * = object
+  case kind *:RequestKind
+  of Generic     : generic       *{.readonly.}:C.xcb_void_cookie_t
+  of PointerGrab : pointer_grab  *{.readonly.}:C.xcb_grab_pointer_cookie_t
+#___________________
+type Reply * = object
+  case kind *:RequestKind
+  of Generic     : generic       *{.readonly.}:ptr C.xcb_generic_error_t
+  of PointerGrab : pointer_grab  *{.readonly.}:ptr C.xcb_grab_pointer_reply_t
 
 
 #_______________________________________
