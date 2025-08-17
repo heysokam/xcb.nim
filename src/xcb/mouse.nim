@@ -43,10 +43,11 @@ func grab *(
     mode_pointer  : xcb.GrabMode = xcb.GrabMode.Async;
     mode_keyboard : xcb.GrabMode = xcb.GrabMode.Async;
     confined      : bool         = false;
+    owner_events  : bool         = true;
   ) :void=
   let reply = xcb.Request(kind: xcb.RequestKind.Generic, generic: C.xcb_grab_button_checked(
     c             = conn.ct,
-    owner_events  = 0,  # FIX: Configurable
+    owner_events  = owner_events.uint8,
     grab_window   = window.ct,
     event_mask    = button.events.to(uint16),
     pointer_mode  = mode_pointer.ord.uint8,
