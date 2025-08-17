@@ -196,7 +196,9 @@ type ButtonEvent  * = enum todo
 type ButtonEvents * = set[ButtonEvent]
 func to *[T](val :ButtonEvents; t :typedesc[T]) :T= cast[T](val)
 type Button * = object
-  ct         *{.readonly.}:uint8
-  events     *{.readonly.}:ButtonEvents
-  modifiers  *{.readonly.}:Modifiers
+  id         *{.readonly.}:ButtonID
+  events     *{.readonly.}:ButtonEvents= ButtonEvents.all
+  modifiers  *{.readonly.}:Modifiers= Modifiers.all
+func ct *(val :Button) :uint8= val.id.ord.uint8
+func `ct=` *(button :var Button; val :uint8) :void= button.id = ButtonID(val)
 
