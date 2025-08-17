@@ -49,7 +49,7 @@ func grab *(
     c             = conn.ct,
     owner_events  = owner_events.uint8,
     grab_window   = window.ct,
-    event_mask    = button.events.to(uint16),
+    event_mask    = button.events.toMask(uint16),
     pointer_mode  = mode_pointer.ord.uint8,
     keyboard_mode = mode_keyboard.ord.uint8,
     confine_to    = if confined: window.ct else: C.xcb_window_t(C.XCB_NONE),
